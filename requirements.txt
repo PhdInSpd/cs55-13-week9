@@ -1,0 +1,7 @@
+x   -   Your Next.js-powered full-stack application will offer a basic "to do list" application base on the tutorial.
+        Use a Repl.it workspace to host your creation. Manage your application's code using a GitHub repository and 
+        git from your workspace shell's command-line interface.
+
+x   -   The finished app should use Firebase authentication using Google (or email/password) and a single Firestore 
+        database with a collection containing documents holding individual data entries composed of fields. It is not
+        required to deploy this assignment to Vercel.
