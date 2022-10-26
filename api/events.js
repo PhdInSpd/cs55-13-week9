@@ -10,16 +10,17 @@ import {
     deleteDoc
 } from "firebase/firestore";
 
-const addTodo = async( { userId, title, description, status } ) => {
+const addEvent = async( { userId, title, description, status, startDate, endDate } ) => {
     try{
         await addDoc(
-            collection( db, "todo" ),
+            collection( db, "events" ),
             {
                 user: userId,
                 title: title,
                 description: description,
                 status: status,
-                createdAt: new Date().getTime()
+                startDate: startDate,
+                endDate: endDate
             }
         );
     }
@@ -28,10 +29,10 @@ const addTodo = async( { userId, title, description, status } ) => {
     }
 };
 
-const toggleTodoStatus = async( { docId, status } ) => {
+const toggleEventStatus = async( { docId, status } ) => {
     try {
         // reference to existing firestore document by id
-        const todoRef = doc( db, "todo", docId );
+        const todoRef = doc( db, "events", docId );
 
         // update that doc
         await updateDoc(
@@ -46,10 +47,10 @@ const toggleTodoStatus = async( { docId, status } ) => {
     }
 };
 
-const deleteTodo = async( docId ) => {
+const deleteEvent = async( docId ) => {
     try {
          // reference to existing firestore document by id
-         const todoRef = doc( db, "todo", docId );
+         const todoRef = doc( db, "events", docId );
 
          // update that doc
          await deleteDoc( todoRef );
@@ -61,4 +62,4 @@ const deleteTodo = async( docId ) => {
 };
 
 
-export { addTodo, toggleTodoStatus, deleteTodo }; 
+export { addEvent , toggleEventStatus  , deleteEvent}; 

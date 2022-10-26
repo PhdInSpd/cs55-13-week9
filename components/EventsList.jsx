@@ -4,6 +4,7 @@ import {
     Heading,
     SimpleGrid,
     Text,
+    Link,
     useToast,
 } from "@chakra-ui/react";
 
@@ -18,79 +19,77 @@ import {
 
 import { db } from "../firebase";
 import { FaToggleOff, FaToggleOn, FaTrash } from "react-icons/fa";
-import { deleteTodo, toggleTodoStatus } from "../api/todo";
+import { deleteEvent, toggleEventStatus } from "../api/events";
     
-const TodoList = () => {
-    const [ todos, setTodos] = React.useState([]);
+const EventsList = () => {
+    const [ events, setEvent] = React.useState([]);
     const {  user } = useAuth();
     const toast = useToast();
-    // update the list from firestore data
-    const refreshData = () => {
-        if (!user) {
-            setTodos([]);
-            return;
-        }
-        // USER logged in
-        const q = query( 
-            collection( db, "todo"),
-            where("user", "==", user.uid));
-        // query is async, setup event handler with firebase
-        onSnapshot( 
-            q,
-            (querySnapshot) => {
-                let ar = [];
-                querySnapshot.docs.forEach( (doc) => {
-                    ar.push(
-                        { 
-                            id: doc.id,
-                            ...doc.data() 
-                        });
-                });
-                setTodos(ar);
-            }
-        );
-    };
+    
     // update ui with refreshData
     useEffect(
         () => {
-            refreshData();
+            // update the list from firestore data
+            if (!user) {
+                setEvent([]);
+                return;
+            }
+            // USER logged in
+            const q = query( 
+                collection( db, "events"),
+                where("user", "==", user.uid));
+            // query is async, setup event handler with firebase
+            onSnapshot( 
+                q,
+                (querySnapshot) => {
+                    let ar = [];
+                    querySnapshot.docs.forEach( (doc) => {
+                        ar.push(
+                            { 
+                                id: doc.id,
+                                ...doc.data() 
+                            });
+                    });
+                    setEvent(ar);
+                }
+            );
         },
         [user]
     );
-    const handleTodoDelete = async (id/*doc id*/) => {
-        if ( confirm("Are you sure you wanna delete this todo?") ) {
-            deleteTodo(id);
+    const handleEventDelete = async (id/*doc id*/) => {
+        if ( confirm("Are you sure you wanna delete this events?") ) {
+            deleteEvent(id);
             toast(
                 { 
-                    title: "Todo deleted successfully",
+                    title: "Event deleted successfully",
                     status: "success" 
                 });
         }
     };
     const handleToggle = async (id, status) => {
         const newStatus = status == "completed" ? "pending" : "completed";
-        await toggleTodoStatus({ docId: id, status: newStatus });
+        await toggleEventStatus({ docId: id, status: newStatus });
         toast({
-            title: `Todo marked ${newStatus}`,
+            title: `Event marked ${newStatus}`,
             status: newStatus == "completed" ? "success" : "warning",
         });
     };
 
     return (
     <Box mt={5}>
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8}>
-            {   todos &&
-                todos.map( 
-                    (todo) => (
+        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
+            {   events &&
+                events.map( 
+                    (event) => (
                         <Box
                             p={3}
                             boxShadow="2xl"
                             shadow={"dark-lg"}
                             transition="0.2s"
                             _hover={{ boxShadow: "sm" }} 
-                            key={todo.id} >
+                            key={event.id} >
                                 <Heading as="h3" fontSize={"xl"}>
-                                    {todo.title}{" "}
+                                    <Link href={"./events/"+event.id}> Title:  {event.title}{" "} </Link>                                     
                                     <Badge
                                         color="red.500"
                                         bg="inherit"
@@ -101,11 +100,11 @@ const TodoList = () => {
                                         }}
                                         float="right"
                                         size="xs"
-                                        onClick={() => handleTodoDelete(todo.id)} >
+                                        onClick={() => handleEventDelete(event.id)} >
                                             <FaTrash />
                                     </Badge>
                                     <Badge
-                                        color={todo.status == "pending" ? "gray.500" : "green.500"}
+                                        color={event.status == "pending" ? "gray.500" : "green.500"}
                                         bg="inherit"
                                         transition={"0.2s"}
                                         _hover={{
@@ -114,18 +113,24 @@ const TodoList = () => {
                                         }}
                                         float="right"
                                         size="xs"
-                                        onClick={() => handleToggle(todo.id, todo.status)} >
-                                            {todo.status == "pending" ? <FaToggleOff /> : <FaToggleOn />}
+                                        onClick={() => handleToggle(event.id, event.status)} >
+                                            {event.status == "pending" ? <FaToggleOff /> : <FaToggleOn />}
                                     </Badge>
                                     <Badge
                                         float="right"
                                         opacity="0.8"
-                                        bg={todo.status == "pending" ? "yellow.500" : "green.500"} >
-                                            {todo.status}
+                                        bg={event.status == "pending" ? "yellow.500" : "green.500"} >
+                                            {event.status}
                                     </Badge>
                                 </Heading>
                                 <Text>
-                                    {todo.description}                                    
+                                    Description: {event.description}                                     
+                                </Text>
+                                <Text>
+                                    StartDate: start: {event.startDate}                                      
+                                </Text>
+                                <Text>
+                                    EndDate: end: {event.endDate}                                      
                                 </Text>
                         </Box>
             ))
@@ -134,4 +139,4 @@ const TodoList = () => {
     </Box>
     );
 };
-export default TodoList;
+export default EventsList;

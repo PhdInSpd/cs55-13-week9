@@ -1,7 +1,14 @@
-x   -   Your Next.js-powered full-stack application will offer a basic "to do list" application base on the tutorial.
-        Use a Repl.it workspace to host your creation. Manage your application's code using a GitHub repository and 
-        git from your workspace shell's command-line interface.
+o       -       extend the application to support the display and creation of an additional type of data besides "todo" items.
 
-x   -   The finished app should use Firebase authentication using Google (or email/password) and a single Firestore 
-        database with a collection containing documents holding individual data entries composed of fields. It is not
-        required to deploy this assignment to Vercel.
+o       -       Your new data must include at least 
+                        two user-entered fields of data in the app,
+                        must be stored in Firestore as a single collection,
+                        related to the user through the use of a field in each Firestore document that stores the unique ID for the associated user.
+
+o       -       Work locally in your own development environment. You can run your application from the terminal in VS Code directly.
+                Only use a Repl.it workspace to deploy your final fileset. The app may not run in Repl.it due to server resource constraints.
+                Manage your application's code using a GitHub repository and git from your workspace shell's command-line interface.
+
+o       -       The finished app should use server-side rendering and dynamic page routing to support the display of a single document's data from
+                the new Firestore collection you create.
+x       -       It is not required to deploy this assignment to Vercel.

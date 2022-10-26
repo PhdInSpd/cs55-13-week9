@@ -13,21 +13,23 @@ import {
 // bring in useAuth from our hooks
 import useAuth from "../hooks/useAuth";
 // addTodo from api
-import { addTodo } from "../api/todo";
+import { addEvent } from "../api/events";
 
 // define custom jsx component
-const AddTodo = () => {
+const AddEvents = () => {
     // everpy form control (text input) we will associate a react state
     const [ title, setTitle ] = React.useState("");
     const [ description, setDescription ] = React.useState("");
     const [ status, setStatus ] = React.useState("pending");
     const [ isLoading, setIsLoading ] = React.useState(false);
+    const [ startDate, setStartDate ] = React.useState( "" );
+    const [ endDate, setEndDate ] = React.useState( "" );
     const toast = useToast();
 
     const { isLoggedIn, user } = useAuth();
 
     // handle the add todo operation
-    const handleTodoCreate =  async () => {
+    const handleEventsCreate =  async () => {
         if( !isLoggedIn ) {
             // show a floating alert
             toast(
@@ -43,22 +45,26 @@ const AddTodo = () => {
         //user logged in
         setIsLoading(true);
         // build an object value template
-        const todo = {
+        const events = {
             title,
             description,
             status,
+            startDate,
+            endDate,
             userId: user.uid
         };
         // add a new doc to firestore
-        await addTodo(todo);
+        await addEvent(events);
         setIsLoading(false);
         setTitle("");
         setDescription("");
         setStatus("pending");
+        setStartDate( "" );
+        setEndDate( "" );
         // show floaty with status update
         toast(
             {
-                title: "To do created",
+                title: "Events created",
                 status: "success"
             }
         );
@@ -77,6 +83,16 @@ const AddTodo = () => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
+                <Textarea
+                    placeholder="StartDate"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                />
+                <Textarea
+                    placeholder="EndDate"
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
+                />
                 <Select 
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}>
@@ -92,11 +108,11 @@ const AddTodo = () => {
                     </option>
                 </Select>
                 <Button
-                    onClick={() => handleTodoCreate()}
-                    disabled={title.length < 1 || description.length < 1 || isLoading}
+                    onClick={() => handleEventsCreate()}
+                    disabled={title.length < 1 || description.length < 1 || startDate.length < 1 || endDate.length < 1 || isLoading}
                     colorScheme="teal"
                     variant="solid" >
-                        Add Todo
+                        Add Event
                 </Button>
             </Stack>
         </Box>
@@ -105,4 +121,4 @@ const AddTodo = () => {
 };
 
 // export
-export default AddTodo;
+export default AddEvents;
