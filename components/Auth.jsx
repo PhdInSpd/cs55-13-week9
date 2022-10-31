@@ -5,6 +5,7 @@ import {
     Button,
     Link,
     Text,
+    VStack,
     useColorMode 
 } from "@chakra-ui/react";
 
@@ -51,11 +52,24 @@ const Auth = () => {
     return (
         <Box display="flex" alignItems="center" justifyContent="space-between">
             <Box>
-                <Link href="/add-events">Add Events</Link>
+                <VStack>
+                    <Link href="/add-todo">Add Todo</Link>
+                    <Link href="/todos-list">List All Todos</Link>
+                </VStack>
             </Box>
             <Box>
-                <Link href="/">List All Event</Link>
+                <VStack>
+                    <Link href="/add-event">Add Event</Link>
+                    <Link href="/">List All Event</Link>
+                </VStack>                
             </Box>
+            <Box>
+                <VStack>
+                    <Link href="/add-contact">Add Contact</Link>
+                    <Link href="/contacts-list">List All Contacts</Link>
+                </VStack>                
+            </Box>
+    
             <Box textAlign="right">
                 <Button 
                     onClick={() => toggleColorMode()}>

@@ -12,31 +12,29 @@ import {
 
 // bring in useAuth from our hooks
 import useAuth from "../hooks/useAuth";
-// addTodo from api
-import { addEvent } from "../api/events";
+//  from api
+import { collectionNames, addCollectionDoc } from "../api/crud";
 
 // define custom jsx component
-const AddEvents = () => {
+const AddTodo = () => {
     // everpy form control (text input) we will associate a react state
     const [ title, setTitle ] = React.useState("");
     const [ description, setDescription ] = React.useState("");
     const [ status, setStatus ] = React.useState("pending");
     const [ isLoading, setIsLoading ] = React.useState(false);
-    const [ startDate, setStartDate ] = React.useState( "" );
-    const [ endDate, setEndDate ] = React.useState( "" );
     const toast = useToast();
 
     const { isLoggedIn, user } = useAuth();
 
     // handle the add todo operation
-    const handleEventsCreate =  async () => {
+    const handleTodoCreate =  async () => {
         if( !isLoggedIn ) {
             // show a floating alert
             toast(
                 {
                     title: "you must be logged in to create a todo",
                     status: "error",
-                    duration:  9000,
+                    duration:  1000,
                     isCloseable: true
                 }
             );
@@ -45,26 +43,22 @@ const AddEvents = () => {
         //user logged in
         setIsLoading(true);
         // build an object value template
-        const events = {
-            title,
-            description,
-            status,
-            startDate,
-            endDate,
-            userId: user.uid
+        const todoMain = {
+            title: title,
+            description: description,
+            status: status,
+            user: user.uid
         };
         // add a new doc to firestore
-        await addEvent(events);
+        await addCollectionDoc( collectionNames.todo, todoMain);
         setIsLoading(false);
         setTitle("");
         setDescription("");
         setStatus("pending");
-        setStartDate( "" );
-        setEndDate( "" );
         // show floaty with status update
         toast(
             {
-                title: "Events created",
+                title: "To do created",
                 status: "success"
             }
         );
@@ -83,16 +77,6 @@ const AddEvents = () => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                 />
-                <Textarea
-                    placeholder="StartDate"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                />
-                <Textarea
-                    placeholder="EndDate"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                />
                 <Select 
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}>
@@ -108,11 +92,11 @@ const AddEvents = () => {
                     </option>
                 </Select>
                 <Button
-                    onClick={() => handleEventsCreate()}
-                    disabled={title.length < 1 || description.length < 1 || startDate.length < 1 || endDate.length < 1 || isLoading}
+                    onClick={() => handleTodoCreate()}
+                    disabled={title.length < 1 || description.length < 1 || isLoading}
                     colorScheme="teal"
                     variant="solid" >
-                        Add Event
+                        Add Todo
                 </Button>
             </Stack>
         </Box>
@@ -121,4 +105,4 @@ const AddEvents = () => {
 };
 
 // export
-export default AddEvents;
+export default AddTodo;

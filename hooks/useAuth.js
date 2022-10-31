@@ -18,7 +18,8 @@ const useAuth = () => {
                 // set react state variable user
                 setUser( user );
               });
-        });
+        }
+    );
     return { user, isLoggedIn };    
 };
 

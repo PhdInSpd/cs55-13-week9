@@ -21,34 +21,35 @@ import {
 import { db } from "../firebase";
 import { FaToggleOff, FaToggleOn, FaTrash, FaEdit } from "react-icons/fa";
 import { collectionNames, deleteCollectionDoc, updateCollectionDocFields } from "../api/crud";
-    
-const EventsList = () => {
-    const [ events, setEvent] = React.useState([]);
-    const {  user } = useAuth();    
+
+const TodosList = () => {
+    const [ todos, setTodos] = React.useState([]);
+    const {  user } = useAuth();
     // const [toastMessage, setToastMessage] = useState(undefined);
     const toast = useToast();
-    
+
     // update ui with refreshData
     useEffect(
         () => {
 
             // update the list from firestore data
             if (!user) {
-                setEvent([]);
+                setTodos([]);
+
                 // toast(
                 //     {
-                //         title: "you must be logged in to show event list",
+                //         title: "you must be logged in to show todos",
                 //         status: "error",
                 //         duration:  5000,
                 //         isCloseable: true
                 //     }
                 // );
-                console.log( "you must be logged in to show event list" );
+                console.log( "you must be logged in to show todos" );
                 return;
             }
             // USER logged in
             const q = query( 
-                collection( db, collectionNames.events),
+                collection( db, collectionNames.todo ),
                 where("user", "==", user.uid));
             // query is async, setup event handler with firebase
             onSnapshot( 
@@ -62,52 +63,51 @@ const EventsList = () => {
                                 ...doc.data() 
                             });
                     });
-                    setEvent(ar);
+                    setTodos(ar);
                 }
             );
         },
         [user/*, toastMessage, toast*/]
     );
-    const handleEventDelete = async (id/*doc id*/) => {
-        if ( confirm("Are you sure you wanna delete this events?") ) {
-            deleteCollectionDoc( collectionNames.events, id);
+    const handleTodoDelete = async (id/*doc id*/) => {
+        if ( confirm("Are you sure you wanna delete this todo?") ) {
+            deleteCollectionDoc( collectionNames.todo, id);
             toast(
                 { 
-                    title: "Event deleted successfully",
+                    title: "Todo deleted successfully",
                     status: "success" 
                 });
         }
     };
     const handleToggle = async (id, status) => {
         const newStatus = status == "completed" ? "pending" : "completed";
-        await updateCollectionDocFields( 
-                    collectionNames.events,
-                    id,
-                    {
-                        status: newStatus,
-                    });
+        await updateCollectionDocFields(  
+            collectionNames.todo,
+            id,
+            {
+                status: newStatus,
+            });
         toast({
-            title: `Event marked ${newStatus}`,
+            title: `Todo marked ${newStatus}`,
             status: newStatus == "completed" ? "success" : "warning",
         });
     };
 
     return (
     <Box mt={5}>
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
-            {   events &&
-                events.map( 
-                    (event) => (
+        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8}>
+            {   todos &&
+                todos.map( 
+                    (todo) => (
                         <Box
                             p={3}
                             boxShadow="2xl"
                             shadow={"dark-lg"}
                             transition="0.2s"
                             _hover={{ boxShadow: "sm" }} 
-                            key={event.id} >
+                            key={todo.id} >
                                 <Heading as="h3" fontSize={"xl"}>
-                                    {/* todo: how to place icon in same line? => use display => "flex"*/}
-                                    <Link href={"./events/"+event.id} display="flex"> <FaEdit/> { "Title: " + event.title}  </Link>                                     
+                                <Link href={"./todos/"+todo.id} display="flex"> <FaEdit/> {todo.title}{" "} </Link>                                    
                                     <Badge
                                         color="red.500"
                                         bg="inherit"
@@ -118,11 +118,11 @@ const EventsList = () => {
                                         }}
                                         float="right"
                                         size="xs"
-                                        onClick={() => handleEventDelete(event.id)} >
+                                        onClick={() => handleTodoDelete(todo.id)} >
                                             <FaTrash />
                                     </Badge>
-                                    {/* <Badge
-                                        color={event.status == "pending" ? "gray.500" : "green.500"}
+                                    <Badge
+                                        color={todo.status == "pending" ? "gray.500" : "green.500"}
                                         bg="inherit"
                                         transition={"0.2s"}
                                         _hover={{
@@ -131,24 +131,18 @@ const EventsList = () => {
                                         }}
                                         float="right"
                                         size="xs"
-                                        onClick={() => handleToggle(event.id, event.status)} >
-                                            {event.status == "pending" ? <FaToggleOff /> : <FaToggleOn />}
+                                        onClick={() => handleToggle(todo.id, todo.status)} >
+                                            {todo.status == "pending" ? <FaToggleOff /> : <FaToggleOn />}
                                     </Badge>
                                     <Badge
                                         float="right"
                                         opacity="0.8"
-                                        bg={event.status == "pending" ? "yellow.500" : "green.500"} >
-                                            {event.status}
-                                    </Badge> */}
+                                        bg={todo.status == "pending" ? "yellow.500" : "green.500"} >
+                                            {todo.status}
+                                    </Badge>
                                 </Heading>
                                 <Text>
-                                    Description: {event.description}                                     
-                                </Text>
-                                <Text>
-                                    StartDate: start: {event.startDate}                                      
-                                </Text>
-                                <Text>
-                                    EndDate: end: {event.endDate}                                      
+                                    {todo.description}                                    
                                 </Text>
                         </Box>
             ))
@@ -157,4 +151,4 @@ const EventsList = () => {
     </Box>
     );
 };
-export default EventsList;
+export default TodosList;

@@ -20,12 +20,12 @@ import { db } from "../../firebase";
 import { collectionNames, updateCollectionDoc } from "../../api/crud";
 
 // single jsx component to show one todo
-const EventItem = ( { itemData } ) => {
+const ContactItem = ( { itemData } ) => {
     // every form control (text input) we will associate a react state
-    const [ title, setTitle ] = React.useState(itemData.title);
-    const [ description, setDescription ] = React.useState( itemData.description );
-    const [ startDate, setStartDate ] = React.useState( itemData.startDate );
-    const [ endDate, setEndDate ] = React.useState( itemData.endDate );
+    const [ firstName, setFirstName ] = React.useState(itemData.firstName);
+    const [ lastName, setLastName ] = React.useState( itemData.lastName );
+    const [ phone, setPhone ] = React.useState( itemData.phone );
+    const [ email, setEmail ] = React.useState( itemData.email );
     const [ docID, setDocID ] = React.useState( itemData.docID );
     const [ isLoading, setIsLoading ] = React.useState(false);
 
@@ -37,12 +37,12 @@ const EventItem = ( { itemData } ) => {
     }
 
      // handle the update event  operation
-    const handleEventUpdate =  async () => {
+    const handleContactUpdate =  async () => {
         if( !isLoggedIn ) {
             // show a floating alert
             toast(
                 {
-                    title: "you must be logged in to edit an EVENT",
+                    title: "you must be logged in to edit a contact",
                     status: "error",
                     duration:  1000,
                     isCloseable: true
@@ -53,21 +53,21 @@ const EventItem = ( { itemData } ) => {
         //user logged in
         setIsLoading(true);
         // build an object value template
-        const eventMain = {
-            title: title,
-            description: description,
+        const contactMain = {
+            firstName: firstName,
+            lastName: lastName,
             //status: status,
-            startDate: startDate,
-            endDate: endDate,
+            phone: phone,
+            email: email,
             user: user.uid
         };
         // add a new doc to firestore
-        await updateCollectionDoc( collectionNames.events, docID, eventMain );
+        await updateCollectionDoc( collectionNames.contacts, docID, contactMain );
         setIsLoading(false);
         // show floaty with status update
         toast(
             {
-                title: "Event updated",
+                title: "Contacts updated",
                 status: "success"
             }
         );
@@ -77,43 +77,43 @@ const EventItem = ( { itemData } ) => {
     return (
         <Box w="40%" margin={"0 auto"} display="block" mt={5}>
             <Stack direction="column">
-                <Text>Title</Text>
+                <Text>First Name</Text>
                 <Input
-                    placeholder="Title"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Jose"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
                 />
 
-                <Text>Description</Text>
+                <Text>Last Name</Text>
                 <Textarea
-                    placeholder="Description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Martinez"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
                 />
 
-                <Text>Start Date</Text>
+                <Text>Phone</Text>
                 <Textarea
-                    placeholder="StartDate"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
+                    placeholder="707 777 7777"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                 />
 
-                <Text>End Date</Text>
+                <Text>email</Text>
                 <Textarea
-                    placeholder="EndDate"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
+                    placeholder="jose@gmail.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                 />
                 <Button
-                    onClick={() => handleEventUpdate()}
-                    disabled={  (title && title.length < 1) || 
-                                (description && description.length < 1) || 
-                                (startDate && startDate.length < 1) ||
-                                (endDate && endDate.length < 1) || 
+                    onClick={() => handleContactUpdate()}
+                    disabled={  (firstName && firstName.length < 1) || 
+                                (lastName && lastName.length < 1) || 
+                                (phone && phone.length < 1) ||
+                                (email && email.length < 1) || 
                                 isLoading}
                     colorScheme="teal"
                     variant="solid" >
-                        Update Event
+                        Update Contact
                 </Button>
             </Stack>
         </Box>
@@ -129,7 +129,7 @@ export async function getServerSideProps( context ) {
 
     // url parameter: context.params.id
     // get a doc from firestore
-    const docRef = doc( db, collectionNames.events, context.params.id);
+    const docRef = doc( db, collectionNames.contacts, context.params.id);
     const docSnap = await getDoc( docRef );
     if( docSnap.exists() ) {
         const data = docSnap.data();
@@ -146,4 +146,4 @@ export async function getServerSideProps( context ) {
     };
 }
 
-export default EventItem;
+export default ContactItem;

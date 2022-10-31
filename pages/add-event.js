@@ -1,12 +1,12 @@
 import { Container } from "@chakra-ui/react";
 import Auth from "../components/Auth";
-import AddEvents from "../components/AddEvents";
+import AddEvent from "../components/AddEvent";
 
-export default function AddEvents2() {
+export default function AddEventJS() {
     return (
         <Container maxW="7xl">
             <Auth />
-            <AddEvents />
+            <AddEvent />
         </Container>
     );
 };

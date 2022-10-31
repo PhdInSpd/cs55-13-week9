@@ -5,6 +5,7 @@ import {
     Button,
     Textarea,
     Stack,
+    Select,
     VStack,
     Heading,
     SimpleGrid,
@@ -20,12 +21,11 @@ import { db } from "../../firebase";
 import { collectionNames, updateCollectionDoc } from "../../api/crud";
 
 // single jsx component to show one todo
-const EventItem = ( { itemData } ) => {
+const ContactItem = ( { itemData } ) => {
     // every form control (text input) we will associate a react state
     const [ title, setTitle ] = React.useState(itemData.title);
     const [ description, setDescription ] = React.useState( itemData.description );
-    const [ startDate, setStartDate ] = React.useState( itemData.startDate );
-    const [ endDate, setEndDate ] = React.useState( itemData.endDate );
+    const [ status, setStatus ] = React.useState( itemData.status );
     const [ docID, setDocID ] = React.useState( itemData.docID );
     const [ isLoading, setIsLoading ] = React.useState(false);
 
@@ -37,12 +37,12 @@ const EventItem = ( { itemData } ) => {
     }
 
      // handle the update event  operation
-    const handleEventUpdate =  async () => {
+    const handleTodoUpdate =  async () => {
         if( !isLoggedIn ) {
             // show a floating alert
             toast(
                 {
-                    title: "you must be logged in to edit an EVENT",
+                    title: "you must be logged in to edit a todo",
                     status: "error",
                     duration:  1000,
                     isCloseable: true
@@ -53,21 +53,19 @@ const EventItem = ( { itemData } ) => {
         //user logged in
         setIsLoading(true);
         // build an object value template
-        const eventMain = {
+        const todoMain = {
             title: title,
             description: description,
-            //status: status,
-            startDate: startDate,
-            endDate: endDate,
+            status: status,
             user: user.uid
         };
         // add a new doc to firestore
-        await updateCollectionDoc( collectionNames.events, docID, eventMain );
+        await updateCollectionDoc( collectionNames.todo, docID, todoMain );
         setIsLoading(false);
         // show floaty with status update
         toast(
             {
-                title: "Event updated",
+                title: "todo updated",
                 status: "success"
             }
         );
@@ -91,29 +89,30 @@ const EventItem = ( { itemData } ) => {
                     onChange={(e) => setDescription(e.target.value)}
                 />
 
-                <Text>Start Date</Text>
-                <Textarea
-                    placeholder="StartDate"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                />
+                <Select 
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}>
+                    <option
+                        value={"pending"}
+                        style={{ color: "yellow", fontWeight: "bold" }} >
+                            Pending
+                    </option>
+                    <option
+                        value={"completed"}
+                        style={{ color: "green", fontWeight: "bold" }} >
+                            Completed
+                    </option>
+                </Select>
 
-                <Text>End Date</Text>
-                <Textarea
-                    placeholder="EndDate"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                />
                 <Button
-                    onClick={() => handleEventUpdate()}
+                    onClick={() => handleTodoUpdate()}
                     disabled={  (title && title.length < 1) || 
                                 (description && description.length < 1) || 
-                                (startDate && startDate.length < 1) ||
-                                (endDate && endDate.length < 1) || 
+                                (status && status.length < 1) ||
                                 isLoading}
                     colorScheme="teal"
                     variant="solid" >
-                        Update Event
+                        Update Todo
                 </Button>
             </Stack>
         </Box>
@@ -129,7 +128,7 @@ export async function getServerSideProps( context ) {
 
     // url parameter: context.params.id
     // get a doc from firestore
-    const docRef = doc( db, collectionNames.events, context.params.id);
+    const docRef = doc( db, collectionNames.todo, context.params.id);
     const docSnap = await getDoc( docRef );
     if( docSnap.exists() ) {
         const data = docSnap.data();
@@ -146,4 +145,4 @@ export async function getServerSideProps( context ) {
     };
 }
 
-export default EventItem;
+export default ContactItem;
