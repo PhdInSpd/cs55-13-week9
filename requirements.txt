@@ -29,6 +29,6 @@ x   F. Work locally. Use a local development environment to develop your creatio
 x      Manage your application's code using a GitHub repository and git from your workspace shell's command-line interface.
        Copy all project files once completed to your team Repl.it workspace as well.
 
-    G. Deploy finished app to Vercel. The finished app should be deployed to Vercel.
+x   G. Deploy finished app to Vercel. The finished app should be deployed to Vercel.
 
 x   H. USE chakra NAVBAR
