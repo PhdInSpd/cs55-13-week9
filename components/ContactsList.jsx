@@ -80,7 +80,7 @@ const ContactsList = () => {
 
     return (
     <Box mt={5}>
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={4}>
             {   contacts &&
                 contacts.map( 
                     (contact) => (

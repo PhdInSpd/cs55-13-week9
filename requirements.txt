@@ -15,8 +15,8 @@ x       Create: user must have the ability to create new documents in each datas
 x       Retrieve: application must retrieve and display documents in each dataset.
 x       Update: user must have the ability to edit the fields of each existing document.
 x       Delete: user must have the ability to delete individual documents.
-    D. Responsive and accessible user interface. You are asked to more fully utilize the
-       Chakra UI React component library to implement a consistent user interface for your
+x   D. Responsive and accessible user interface. You are asked to more fully utilize the
+x      Chakra UI React component library to implement a consistent user interface for your
        entire full-stack application that is both responsive and accessible.
 
 x   E.  Re-factor app to ensure security of Firebase secrets. The original v9 tutorial left the Firebase credentials
@@ -24,20 +24,11 @@ x   E.  Re-factor app to ensure security of Firebase secrets. The original v9 tu
         not a secure practice. It is important to conceal and protect the Firebase credentials, which should be stored
         in a file that is not be part of the git repository.
 
-    F. Work locally. Use a local development environment to develop your creation.
-       Manage your application's code using a GitHub repository and git from your workspace shell's command-line interface.
+x   F. Work locally. Use a local development environment to develop your creation.
+
+x      Manage your application's code using a GitHub repository and git from your workspace shell's command-line interface.
        Copy all project files once completed to your team Repl.it workspace as well.
 
     G. Deploy finished app to Vercel. The finished app should be deployed to Vercel.
-============================================================================================
-o       -   extend the application to support the display and creation of 3 unique data sets
-            -   todo
-            -   events
-            -   contacts
-o       -   each data set should haver userID
-o       -   full CRUD support
-o       -   responsive and accessible UI
-o       -   refactor app to ensure security
-o       -   work locally
-o       -   deploy to Vercel
-o       -   USE chakra NAVBAR
+
+x   H. USE chakra NAVBAR

@@ -94,7 +94,7 @@ const EventsList = () => {
 
     return (
     <Box mt={5}>
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={4}>
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 4 }} spacing={4}>
             {   events &&
                 events.map( 
                     (event) => (

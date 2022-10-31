@@ -71,7 +71,7 @@ const AddContact = () => {
     };
 
     return (
-        <Box w="40%" margin={"0 auto"} display="block" mt={5}>
+        <Box w={{base: "90%", md:"80%", lg:"60%"}} margin={"0 auto"} display="block" mt={5}>
             <Stack direction="column">
                 <Textarea
                     placeholder="first name"

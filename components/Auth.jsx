@@ -49,28 +49,9 @@ const Auth = () => {
                     // ...
                 });
     };
-    return (
+    return (        
         <Box display="flex" alignItems="center" justifyContent="space-between">
-            <Box>
-                <VStack>
-                    <Link href="/add-todo">Add Todo</Link>
-                    <Link href="/todos-list">List All Todos</Link>
-                </VStack>
-            </Box>
-            <Box>
-                <VStack>
-                    <Link href="/add-event">Add Event</Link>
-                    <Link href="/">List All Event</Link>
-                </VStack>                
-            </Box>
-            <Box>
-                <VStack>
-                    <Link href="/add-contact">Add Contact</Link>
-                    <Link href="/contacts-list">List All Contacts</Link>
-                </VStack>                
-            </Box>
-    
-            <Box textAlign="right">
+            <Box w="full" textAlign="right">
                 <Button 
                     onClick={() => toggleColorMode()}>
                         {colorMode == "dark" ? <FaSun /> : <FaMoon />}
